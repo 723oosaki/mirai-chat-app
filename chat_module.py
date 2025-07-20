@@ -12,14 +12,15 @@ SYSTEM_PROMPT = """
 難しい言葉が含まれていた場合は、補足説明を追加してください。
 """
 
-def ask_mirai(user_input):
+def ask_mirai(user_input, history):
     try:
+        messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+        messages += history
+        messages.append({"role": "user", "content": user_input})
+
         chat_completion = client.chat.completions.create(
             model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": user_input}
-            ],
+            messages=messages,
             temperature=0.5
         )
         return chat_completion.choices[0].message.content
