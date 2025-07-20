@@ -1,3 +1,20 @@
-.env 
-.venv/ 
-__pycache__/ 
+# ローカルで追加していたもの
+.env
+.venv/
+__pycache__/
+
+# GitHubのテンプレートを活かした続き（必要な範囲のみ抜粋）
+*.py[codz]
+*.so
+build/
+dist/
+*.egg-info/
+htmlcov/
+.tox/
+coverage.*
+.cache
+*.log
+db.sqlite3
+.ipynb_checkpoints
+.mypy_cache/
+.vsc
