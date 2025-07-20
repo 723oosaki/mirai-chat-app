@@ -11,14 +11,15 @@ if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
 # サイドバー
-menu = st.sidebar.radio("みらいちゃんメニュー", ["AIに質問する", "よくある質問", "AIツール比較", "自動化ツール紹介", "やさしいAI用語集", "初めての方へ"])
+menu = st.sidebar.radio("みらいちゃんメニュー", ["初めての方へ", "AIに質問する", "よくある質問", "AIツール比較", "自動化ツール紹介", "やさしいAI用語集"])
 
-# タイトルとみらいちゃんアイコンを横並びで表示
+# タイトル（画像アイコンを表示）
 col_title, col_icon = st.columns([8, 1])
 with col_title:
     st.title("社内AIパートナー みらいちゃん")
 with col_icon:
-    st.image("data/mirai_icon.png", width=80)
+    st.image("data/mirai_icon.png", width=48)
+
 
 if menu == "AIに質問する":
     st.subheader("💬 みらいちゃんに質問してみよう")
@@ -37,9 +38,13 @@ if menu == "AIに質問する":
         if clear:
             st.session_state.chat_history = []
 
-    # 会話履歴表示
+    # 会話履歴表示（色分け表示）
     for message in st.session_state.chat_history:
-        st.chat_message(message["role"]).markdown(message["content"])
+        with st.chat_message(message["role"]):
+            if message["role"] == "user":
+                st.markdown(f"<div style='background-color:#e6f2ff; padding:10px; border-radius:10px; margin-bottom:5px;'>{message['content']}</div>", unsafe_allow_html=True)
+            else:
+                st.markdown(f"<div style='background-color:#fff3e6; padding:10px; border-radius:10px; margin-bottom:5px;'>{message['content']}</div>", unsafe_allow_html=True)
 
 elif menu == "よくある質問":
     st.subheader("📚 よくある質問")
