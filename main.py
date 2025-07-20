@@ -11,22 +11,31 @@ if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
 # サイドバー
-menu = st.sidebar.radio("みらいちゃんメニュー", ["AIに質問する", "よくある質問", "AIツール比較", "自動化ツール紹介", "初めての方へ"])
+menu = st.sidebar.radio("みらいちゃんメニュー", ["AIに質問する", "よくある質問", "AIツール比較", "自動化ツール紹介", "やさしいAI用語集", "初めての方へ"])
 
-st.title("🤖 社内AIパートナー みらいちゃん")
+# タイトルとみらいちゃんアイコンを横並びで表示
+col_title, col_icon = st.columns([8, 1])
+with col_title:
+    st.title("社内AIパートナー みらいちゃん")
+with col_icon:
+    st.image("data/mirai_icon.png", width=80)
 
 if menu == "AIに質問する":
     st.subheader("💬 みらいちゃんに質問してみよう")
     with st.form(key="chat_form"):
-        col1, col2 = st.columns([5, 1])
+        col1, col2, col3 = st.columns([5, 1, 1])
         user_input = col1.text_input("", placeholder="質問を入力してください", label_visibility="collapsed", key="input")
         send = col2.form_submit_button("🚀 送信")
+        clear = col3.form_submit_button("🗑️ リセット")
 
         if send and user_input:
             with st.spinner("みらいちゃんが考え中..."):
                 response = ask_mirai(user_input, st.session_state.chat_history)
                 st.session_state.chat_history.append({"role": "user", "content": user_input})
                 st.session_state.chat_history.append({"role": "assistant", "content": response})
+
+        if clear:
+            st.session_state.chat_history = []
 
     # 会話履歴表示
     for message in st.session_state.chat_history:
@@ -52,6 +61,15 @@ elif menu == "自動化ツール紹介":
         st.markdown(f"### 🔹 {row['ツール名']}")
         st.markdown(f"**概要：** {row['概要']}")
         st.markdown(f"**主な使い方：** {row['使い方']}")
+        st.markdown("---")
+
+elif menu == "やさしいAI用語集":
+    st.subheader("📖 やさしいAI用語集")
+    with open("data/glossary.json", "r", encoding="utf-8") as f:
+        glossary = json.load(f)
+    for item in glossary:
+        st.markdown(f"### 🟦 {item['用語']}")
+        st.markdown(f"{item['説明']}")
         st.markdown("---")
 
 elif menu == "初めての方へ":
